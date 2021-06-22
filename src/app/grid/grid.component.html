@@ -1,0 +1,11 @@
+<div class="grid">
+  <div class="container" [ngStyle]="gridStyle()">
+    <div
+      *ngFor="let num of grid; let i = index"
+      class="grid-item"
+      [ngClass]="itemStyle(i)"
+    >
+      {{ i + 1 }}
+    </div>
+  </div>
+</div>
