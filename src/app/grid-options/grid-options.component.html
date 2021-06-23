@@ -1,4 +1,22 @@
 <div class="container" [formGroup]="optionsForm">
-  <input name="x" placeholder="x" formControlName="x" (input)="onChange()" />
-  <input name="y" placeholder="y" formControlName="y" (input)="onChange()" />
+  <label for="x">X</label>
+  <input type="number" id="x" name="x" min="0" placeholder="x" formControlName="x" (input)="onChange()" />
+  <br />
+  <label for="y">Y</label>
+  <input type="number" id="y" name="y" placeholder="y" formControlName="y" (input)="onChange()" />
+  <br />
+  <label for="target">Target</label>
+  <input min="0" type="number" id="target" name="target" placeholder="Target" formControlName="target" (input)="onChangeTarget()">
+  <br />
+  <label for="start">Start</label>
+  <input min="0" type="number" id="start" name="start" placeholder="Start" formControlName="start" (input)="onChangeStart()">
+  <br />
+  <label for="startOrTarget">Select Start- or Target Node</label>
+  <select name="startOrTarget" formControlName="startOrTarget" id="startOrTarget" (change)="onChangeStartOrTarget()">
+    <option value="start">Start</option>
+    <option value="target">Target</option>
+  </select>
+  <br>
+  <label for="paintObstacles">Paint Obstacles</label>
+  <input type="checkbox" id="paintObstacles" name="paintObstacles" formControlName="paintObstacles" (change)="onChangePaintMode()">
 </div>

@@ -6,9 +6,15 @@ import { AppComponent } from './app.component';
 import { GridComponent } from './grid/grid.component';
 import { GridOptionsComponent } from './grid-options/grid-options.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PaintObstacleDirective } from './shared/directives/paint-obstacle.directive';
 
 @NgModule({
-  declarations: [AppComponent, GridComponent, GridOptionsComponent],
+  declarations: [
+    AppComponent,
+    GridComponent,
+    GridOptionsComponent,
+    PaintObstacleDirective,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

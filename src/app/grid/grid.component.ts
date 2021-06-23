@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { GridOptionsService } from '../grid-options.service';
+import { GridOptionsService } from '../shared/services/grid-options.service';
 import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { ObstaclePaintService } from '../shared/services/obstacle-paint.service';
 
 @Component({
   selector: 'app-grid',
@@ -8,57 +10,60 @@ import { tap } from 'rxjs/operators';
   styleUrls: ['./grid.component.scss'],
 })
 export class GridComponent implements OnInit {
-  grid: number[][] = [];
-  x = 10;
-  y = 10;
+  grid$ = new BehaviorSubject<number[][]>([]);
+  startOrTarget = this.gridOptionsService.startOrTarget.value;
 
-  start = [0, 0];
-  startI!: number;
-  end = [9, 9];
-  endI!: number;
-
-  constructor(private gridOptionsService: GridOptionsService) {}
+  constructor(
+    private gridOptionsService: GridOptionsService,
+    private obstaclePaintService: ObstaclePaintService
+  ) {}
 
   ngOnInit(): void {
-    this.gridOptionsService.x
+    this.gridOptionsService.grid
       .pipe(
         tap((value) => {
-          this.x = value;
-          this.generateGrid();
+          this.grid$.next(value);
         })
       )
       .subscribe();
 
-    this.gridOptionsService.y
+    this.gridOptionsService.startOrTarget
       .pipe(
         tap((value) => {
-          this.y = value;
-          this.generateGrid();
+          this.startOrTarget = value;
         })
       )
       .subscribe();
   }
 
-  generateGrid() {
-    this.grid = [];
-    for (let i = 0; i < this.x; i++) {
-      for (let j = 0; j < this.y; j++) {
-        this.grid.push([i, j]);
-      }
+  gridStyle(): {
+    'grid-template-columns': string;
+    'grid-template-rows': string;
+  } {
+    return this.gridOptionsService.gridStyle();
+  }
+
+  itemStyle(i: number): { start: boolean; end: boolean } {
+    return this.gridOptionsService.itemStyle(i);
+  }
+
+  public handleGridItemSelectChange(i: number): void {
+    if (
+      this.startOrTarget === 'start' &&
+      !this.obstaclePaintService.paintMode.value &&
+      !this.gridOptionsService.paintObstacles.value
+    ) {
+      this.gridOptionsService.start.next(i);
+    } else if (
+      !this.obstaclePaintService.paintMode.value &&
+      !this.gridOptionsService.paintObstacles.value
+    ) {
+      this.gridOptionsService.target.next(i);
     }
-
-    this.startI = this.start[0] * this.x + this.start[1];
-    this.endI = this.end[0] * this.y + this.end[1];
   }
 
-  gridStyle() {
-    return {
-      'grid-template-columns': 'repeat(' + this.x + ', 1fr)',
-      'grid-template-rows': 'repeat(' + this.y + ', 1fr)',
-    };
-  }
-
-  itemStyle(i: number) {
-    return { start: this.startI === i, end: this.endI === i };
+  public handleMouseLeave(): void {
+    console.log('leave');
+    this.obstaclePaintService.paintMode.next(false);
   }
 }

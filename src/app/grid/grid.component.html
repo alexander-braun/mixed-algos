@@ -1,11 +1,13 @@
-<div class="grid">
-  <div class="container" [ngStyle]="gridStyle()">
+<div class="grid" *ngIf="grid$ | async; let grid">
+  <div class="container" [ngStyle]="gridStyle()" (mouseleave)="handleMouseLeave()">
     <div
       *ngFor="let num of grid; let i = index"
       class="grid-item"
       [ngClass]="itemStyle(i)"
+      (click)="handleGridItemSelectChange(i)"
+      appPaintObstacle
     >
-      {{ i + 1 }}
+      {{ i }}
     </div>
   </div>
 </div>
